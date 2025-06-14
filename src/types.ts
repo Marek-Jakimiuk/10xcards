@@ -22,9 +22,9 @@ type DeckRow = Tables<'decks'>;
 export type FlashcardListDTO = Pick<FiszkaRow, 'id' | 'przod' | 'tyl' | 'status'>;
 
 // 2. FlashcardDetailDTO
-// Used to retrieve a single flashcard (GET /api/flashcards/{id}). It extends FlashcardListDTO with deckId (from deck_id).
+// Used to retrieve a single flashcard (GET /api/flashcards/{id}). It extends FlashcardListDTO with deck_id (from deck_id).
 export interface FlashcardDetailDTO extends FlashcardListDTO {
-  deckId: FiszkaRow['deck_id'];
+  deck_id: FiszkaRow['deck_id'];
 }
 
 // 3. FlashcardCreateInput
@@ -38,7 +38,7 @@ export interface FlashcardCreateInput {
 // 4. FlashcardCreateCommand
 // Command for creating one or more flashcards, with an optional deck assignment.
 export interface FlashcardCreateCommand {
-  deckId?: string;
+  deck_id?: string;
   flashcards: FlashcardCreateInput[];
 }
 
@@ -122,12 +122,12 @@ export interface StudySessionFlashcardDTO {
 // Contains metadata about the study session.
 export interface StudySessionInfoDTO {
   total: number;
-  currentIndex: number;
+  current_index: number;
 }
 
 // 16. StudySessionResponseDTO
 // Final response for a study session endpoint, combining flashcards and session metadata.
 export interface StudySessionResponseDTO {
   session: StudySessionFlashcardDTO[];
-  sessionInfo: StudySessionInfoDTO;
-} 
+  session_info: StudySessionInfoDTO;
+}

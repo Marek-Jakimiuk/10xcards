@@ -50,7 +50,7 @@
    - **Description:** Retrieves details of a specific flashcard.
    - **Response:**
      ```json
-     { "id": "...", "przod": "...", "tyl": "...", "status": "...", "deckId": "..." }
+     { "id": "...", "przod": "...", "tyl": "...", "status": "...", "deck_id": "..." }
      ```
 3. **Create Flashcards**
    - **Method:** POST
@@ -59,7 +59,7 @@
    - **Request Payload:**
      ```json
      {
-       "deckId": "optional-deck-id",
+       "deck_id": "optional-deck-id",
        "flashcards": [
          {
            "przod": "Front of the flashcard (max 200 chars)",
@@ -223,7 +223,7 @@
      ```json
      {
        "session": [ { "id": "...", "przod": "Question?", "tyl": "Answer." } ],
-       "sessionInfo": { "total": 10, "currentIndex": 0 }
+       "session_info": { "total": 10, "current_index": 0 }
      }
      ```
 
