@@ -6,6 +6,7 @@
   - [Project Name](#project-name)
   - [Project Description](#project-description)
   - [Tech Stack](#tech-stack)
+  - [Service Architecture & Naming Conventions](#service-architecture-&-naming-conventions)
   - [Getting Started Locally](#getting-started-locally)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
@@ -26,6 +27,28 @@
 - **AI Integration:** OpenRouter.ai API for LLM-based flashcard generation
 - **CI/CD & Hosting:** GitLab Actions, Docker
 - **Tooling:** ESLint, Prettier
+
+## Service Architecture & Naming Conventions
+The project follows a clear service-oriented architecture with consistent naming conventions:
+
+### Service Types
+- **Core Services:** Handle basic CRUD operations (e.g., `flashcard.service.ts`, `deck.service.ts`)
+- **Generator Services:** Handle AI/LLM integrations (e.g., `flashcard.generator.service.ts`)
+- **Utility Services:** Provide shared functionality across the application
+
+### Naming Convention Rules
+1. All service files should follow the pattern: `name.type.service.ts`
+2. Service classes should match their filenames in PascalCase: `NameTypeService`
+3. Each service should have a single, clear responsibility
+4. Services are organized by their primary function:
+   - Core business logic services in `services/`
+   - AI/Generator services in `services/`
+   - Integration services in `integrations/`
+
+### Current Service Structure
+- `flashcard.service.ts` - Core flashcard CRUD operations
+- `flashcard.generator.service.ts` - AI-based flashcard generation
+- `deck.service.ts` - Deck management operations
 
 ## Getting Started Locally
 ### Prerequisites

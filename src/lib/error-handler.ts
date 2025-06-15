@@ -6,4 +6,4 @@ export function handleError(error: unknown): Response {
   }
   // Potentially add more error handling for other error types
   return new Response(JSON.stringify({ error: "Internal Server Error" }), { status: 500 });
-} 
+}

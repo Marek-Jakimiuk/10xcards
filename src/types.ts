@@ -77,6 +77,7 @@ export interface FlashcardUpdateCommand {
 // Command for generating flashcards via AI (POST /api/flashcards/generate).
 export interface FlashcardGenerateCommand {
   text: string; // Input text with length between 1000 and 10000 characters.
+  title: string; // Title for the flashcard deck
 }
 
 // 7. FlashcardSuggestionDTO

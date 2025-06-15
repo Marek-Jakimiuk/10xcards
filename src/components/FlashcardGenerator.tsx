@@ -1,5 +1,6 @@
 import { Button } from '../components/ui/button';
 import { Textarea } from '../components/ui/textarea';
+import { Input } from '../components/ui/input';
 import { Alert, AlertDescription } from '../components/ui/alert';
 import { Skeleton } from '../components/ui/skeleton';
 import { FlashcardSuggestionList } from './FlashcardSuggestionList';
@@ -13,10 +14,13 @@ export function FlashcardGenerator({ userId }: FlashcardGeneratorProps) {
   const {
     text,
     setText,
+    title,
+    setTitle,
     status,
     error,
     suggestions,
     isTextValid,
+    isTitleValid,
     remainingChars,
     minCharsNeeded,
     hasApprovedSuggestions,
@@ -31,9 +35,20 @@ export function FlashcardGenerator({ userId }: FlashcardGeneratorProps) {
     setText(e.target.value);
   };
 
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  };
+
   return (
     <div className="space-y-6">
       <div className="space-y-4">
+        <Input
+          placeholder="Tytuł zestawu fiszek..."
+          value={title}
+          onChange={handleTitleChange}
+          className="w-full"
+          disabled={status === 'loading' || status === 'saving'}
+        />
         <Textarea
           placeholder="Wklej tutaj tekst do analizy..."
           value={text}
@@ -51,7 +66,7 @@ export function FlashcardGenerator({ userId }: FlashcardGeneratorProps) {
         </div>
         <Button
           onClick={handleGenerateClick}
-          disabled={!isTextValid || status === 'loading' || status === 'saving'}
+          disabled={!isTextValid || !isTitleValid || status === 'loading' || status === 'saving'}
           className="w-full"
         >
           {status === 'loading' ? 'Generowanie...' : 'Generuj Fiszki'}
