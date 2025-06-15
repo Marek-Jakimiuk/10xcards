@@ -39,16 +39,16 @@ export async function listFlashcards({ supabase, user, page, limit, deckId, stat
 }
 
 // Funkcja do tworzenia nowych fiszek
-export async function createFlashcards({ supabase, user, deck_id, flashcards }: { 
+export async function createFlashcards({ supabase, userId, deck_id, flashcards }: { 
   supabase: SupabaseClient<any>, 
-  user: any, 
+  userId: string, 
   deck_id?: string, 
   flashcards: FlashcardCreateInput[] 
 }): Promise<FlashcardListDTO[]> {
   const flashcardsToInsert = flashcards.map(fc => ({
     ...fc,
     deck_id: deck_id || null,
-    created_by: user.id
+    user_id: userId
   }));
   const { data, error } = await supabase.from('fiszki').insert(flashcardsToInsert).select();
   if (error) {
@@ -56,6 +56,7 @@ export async function createFlashcards({ supabase, user, deck_id, flashcards }: 
   }
   const result: FlashcardListDTO[] = (data || []).map((item: any) => ({
     id: item.id,
+    user_id: item.user_id,
     przod: item.przod,
     tyl: item.tyl,
     status: item.status

@@ -1,10 +1,20 @@
 // DTO and Command Model Definitions
 // These types are used for data transfer in the REST API and are based on the underlying database models.
 
-import type { Tables } from './db/database.types';
+import type { Tables, Database } from './db/database.types';
 
 // Define allowed flashcard statuses as per API plan
 export type FlashcardStatus = 'oczekująca' | 'zatwierdzona' | 'odrzucona';
+
+// =============================
+// Auth Types
+// =============================
+
+export interface User {
+  id: string;
+  email: string;
+  created_at: string;
+}
 
 // Underlying database types for flashcards and decks
 // FiszkaRow represents a row in the "fiszki" table
@@ -12,6 +22,19 @@ export type FlashcardStatus = 'oczekująca' | 'zatwierdzona' | 'odrzucona';
 
 type FiszkaRow = Tables<'fiszki'>;
 type DeckRow = Tables<'decks'>;
+
+// =============================
+// View Models
+// =============================
+
+// SuggestionViewModel
+// Used in the flashcard generation view to manage flashcard suggestions
+export interface SuggestionViewModel {
+  id: string;
+  przod: string;
+  tyl: string;
+  status: 'pending' | 'approved' | 'rejected';
+}
 
 // =============================
 // Flashcards DTOs & Commands

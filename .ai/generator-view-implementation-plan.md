@@ -2,7 +2,7 @@
 
 ## 1. Przegląd
 
-Widok "Generator Fiszek" umożliwia użytkownikom automatyczne tworzenie fiszek na podstawie dostarczonego tekstu. Użytkownik wkleja tekst, system wysyła go do usługi AI, a następnie wyświetla listę sugerowanych fiszek. Użytkownik może przeglądać, edytować, akceptować lub odrzucać sugestie, a na koniec zapisać wybrane fiszki w swojej kolekcji.
+Widok "Generator Fiszek" umożliwia użytkownikom automatyczne tworzenie propozycji fiszek na podstawie dostarczonego tekstu. Użytkownik wkleja tekst, system wysyła go do usługi AI, a następnie wyświetla listę sugerowanych fiszek. Użytkownik może przeglądać, edytować, akceptować lub odrzucać sugestie, a na koniec zapisać wybrane fiszki w swojej kolekcji.
 
 ## 2. Routing widoku
 

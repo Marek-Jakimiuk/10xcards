@@ -18,10 +18,10 @@ export async function POST({ request, locals }: { request: Request, locals: any 
     const command: FlashcardGenerateCommand = flashcardGenerateSchema.parse(body);
 
     // Authenticate user
-    const { data: { user }, error: userError } = await locals.supabase.auth.getUser();
-    if (userError || !user) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
-    }
+    // const { data: { user }, error: userError } = await locals.supabase.auth.getUser();
+    // if (userError || !user) {
+    //   return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+    // }
 
     // Call service function to get flashcard generation response
     const responseDto: FlashcardGenerateResponseDTO = await getFlashcardGenerationResponse(command);

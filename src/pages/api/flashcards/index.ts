@@ -2,6 +2,7 @@
 import { z } from 'zod';
 import type { FlashcardListDTO, FlashcardListResponseDTO } from '../../../types';
 import { listFlashcards, createFlashcards } from '../../../lib/services/flashcard.service';
+import { DEFAULT_USER_ID } from '@/db/supabase.client';
 
 // Disable prerender for dynamic API endpoint
 export const prerender = false;
@@ -77,15 +78,15 @@ export async function POST({ request, locals }: { request: Request, locals: any 
     const command = flashcardCreateSchema.parse(body);
 
     // Retrieve authenticated user
-    const { data: { user }, error: userError } = await locals.supabase.auth.getUser();
-    if (userError || !user) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
-    }
+    // const { data: { user }, error: userError } = await locals.supabase.auth.getUser();
+    // if (userError || !user) {
+    //   return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+    // }
 
     // Use service function to create flashcards
     const createdFlashcards = await createFlashcards({
       supabase: locals.supabase,
-      user,
+      userId: DEFAULT_USER_ID,
       deck_id: command.deck_id,
       flashcards: command.flashcards
     });
