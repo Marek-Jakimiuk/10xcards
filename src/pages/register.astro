@@ -1,0 +1,20 @@
+---
+import Layout from "../layouts/Layout.astro";
+import RegisterForm from "../components/auth/RegisterForm";
+import AuthLayout from "../components/auth/AuthLayout";
+import Toaster from "../components/ui/sonner";
+
+// Redirect if already authenticated
+// const { supabase } = Astro.locals;
+// const { data: { user } } = await supabase.auth.getUser();
+// if (user) {
+//   return Astro.redirect('/');
+// }
+---
+
+<Layout title="Rejestracja - Generator Fiszek">
+  <AuthLayout title="Rejestracja" description="Utwórz nowe konto, aby korzystać z generatora fiszek." client:load>
+    <RegisterForm client:load />
+  </AuthLayout>
+  <Toaster client:load />
+</Layout>
