@@ -17,10 +17,6 @@ export class FlashcardGeneratorService {
 
   constructor() {
     const apiKey = import.meta.env.OPENROUTER_API_KEY;
-    console.log("");
-    console.log("");
-    console.log("");
-    console.log("");
     console.log("🔑 [FlashcardGenerator] API Key status:", apiKey ? "✅" : "Missing");
 
     if (!apiKey) {
