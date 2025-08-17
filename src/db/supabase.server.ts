@@ -1,7 +1,6 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import type { AstroCookies } from "astro";
 import type { Database } from "./database.types";
-
 import { SUPABASE_URL, SUPABASE_KEY } from "astro:env/server";
 
 export const createSupabaseServer = (cookies: AstroCookies) => {
