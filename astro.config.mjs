@@ -8,6 +8,7 @@ import tailwindcss from "@tailwindcss/vite";
 import cloudflare from "@astrojs/cloudflare";
 
 // https://astro.build/config
+
 export default defineConfig({
   site: "https://10xcards-4vw.pages.dev", // Your Cloudflare Pages domain
   output: "server",
