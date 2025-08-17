@@ -65,9 +65,9 @@ Kryteria akceptacji:
 - Błędne dane logowania wyświetlają komunikat o nieprawidłowych danych.
 - Dane dotyczące logowania przechowywane są w bezpieczny sposób.
 
-## US-003
-- Tytuł Bezpieczny dostęp i uwierzytelnianie
-- Opis: Jako użytkownik chcę mieć możliwość rejestracji i logowania się do systemu w sposób zapewniający bezpieczeństwo moich danych.
+ID: US-003
+Tytuł: Bezpieczny dostęp i uwierzytelnianie
+Opis: Jako użytkownik chcę mieć możliwość rejestracji i logowania się do systemu w sposób zapewniający bezpieczeństwo moich danych.
 - Kryteria akceptacji:
   - Logowanie (US-002) i rejestracja (US-001) odbywają się na dedykowanych stronach.
   - Logowanie wymaga podania adresu email i hasła.
@@ -79,9 +79,9 @@ Kryteria akceptacji:
   - Nie korzystamy z zewnętrznych serwisów logowania (np. Google, GitHub).
   - Odzyskiwanie hasła powinno być możliwe.
 
-## US-004
-- Tytuł: Kolekcje moich decks z przypisanymi fiszkami
-- Opis: Jako użytkownik chcę móc przeglądać przypisane do mojego konta decks i powiązane z nią fiszki, aby móc przeglądac i przejsc do interesującego mnie decka i rozpoczęcie sesji nauki.
+ID: US-004
+Tytuł: Kolekcje moich decks z przypisanymi fiszkami
+Opis: Jako użytkownik chcę móc przeglądać przypisane do mojego konta decks i powiązane z nią fiszki, aby móc przeglądac i przejsc do interesującego mnie decka i rozpoczęcie sesji nauki.
 - Kryteria akceptacji:
   - Użytkownik może przeglądać przypisane do jego konta decks.
   - Użytkownik może usunąć wybraną deck oraz powiązane z tą kolekcją fiszkami.

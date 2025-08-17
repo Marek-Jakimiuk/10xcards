@@ -54,7 +54,7 @@ API Fiszek zapewnia kompletny zestaw operacji CRUD do zarządzania fiszkami, wł
 ### DTOs
 ```typescript
 import {
-  FlashcardListDTO,
+  FlashcardDTO,
   FlashcardDetailDTO,
   FlashcardCreateInput,
   FlashcardCreateCommand,
@@ -91,7 +91,7 @@ const paginationSchema = z.object({
 1. Walidacja parametrów zapytania przy użyciu paginationSchema
 2. Pobranie użytkownika z kontekstu Supabase
 3. Zapytanie do bazy danych z zastosowanym RLS
-4. Transformacja wyników do FlashcardListDTO[]
+4. Transformacja wyników do FlashcardDTO[]
 5. Zwrócenie odpowiedzi z paginacją
 
 ### Tworzenie Fiszek

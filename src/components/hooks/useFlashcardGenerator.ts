@@ -39,6 +39,7 @@ export function useFlashcardGenerator({ userId }: UseFlashcardGeneratorProps): U
   const [error, setError] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<SuggestionViewModel[]>([]);
   const [pendingSaves, setPendingSaves] = useState<Set<string>>(new Set());
+  const [deckId, setDeckId] = useState<string | null>(null);
 
   // Validation calculations
   const isTextValid = text.length >= 1000 && text.length <= 10000;
@@ -74,6 +75,7 @@ export function useFlashcardGenerator({ userId }: UseFlashcardGeneratorProps): U
         status: "pending" as const,
       }));
 
+      setDeckId(data.deckId);
       setSuggestions(newSuggestions);
       setStatus("success");
       toast.success(`Wygenerowano ${newSuggestions.length} propozycji fiszek`);
@@ -143,8 +145,10 @@ export function useFlashcardGenerator({ userId }: UseFlashcardGeneratorProps): U
       setSuggestions([]);
       setText("");
       setTitle("");
+      setDeckId(null);
 
       const flashcards: FlashcardCreateCommand = {
+        deck_id: deckId || undefined,
         flashcards: approvedSuggestions.map((s) => ({
           przod: s.przod,
           tyl: s.tyl,

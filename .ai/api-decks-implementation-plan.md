@@ -76,7 +76,7 @@ interface DeckUpdateCommand {
 }
 
 interface DeckWithFlashcardsDTO extends DeckDTO {
-  flashcards?: FlashcardListDTO[];
+  flashcards?: FlashcardDTO[];
 }
 ```
 
@@ -105,7 +105,7 @@ interface DeckWithFlashcardsDTO extends DeckDTO {
 
 ### 4.5 Delete Deck
 - Status: 200
-- Body: 
+- Body:
 ```typescript
 {
   message: string;
@@ -135,7 +135,7 @@ export class DeckService {
 export const GET: APIRoute = async ({ locals, params }) => {
   const { supabase, user } = locals;
   const deckService = new DeckService(supabase);
-  
+
   try {
     const decks = await deckService.listDecks(user.id);
     return json({ decks });

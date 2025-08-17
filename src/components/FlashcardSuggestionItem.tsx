@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { Button } from '../components/ui/button';
-import { Textarea } from '../components/ui/textarea';
-import { Card, CardContent, CardFooter } from '../components/ui/card';
-import { Loader2 } from 'lucide-react';
-import type { SuggestionViewModel } from '../types';
+import { useState } from "react";
+import { Button } from "../components/ui/button";
+import { Textarea } from "../components/ui/textarea";
+import { Card, CardContent, CardFooter } from "../components/ui/card";
+import { Loader2 } from "lucide-react";
+import type { FlashcardSuggestionDTO } from "../types";
 
 interface FlashcardSuggestionItemProps {
-  suggestion: SuggestionViewModel;
+  suggestion: FlashcardSuggestionDTO;
   onUpdate: (id: string, updatedData: { przod: string; tyl: string }) => void;
-  onStatusChange: (id: string, status: 'approved' | 'rejected' | 'pending') => Promise<void>;
+  onStatusChange: (id: string, status: "approved" | "rejected" | "pending") => Promise<void>;
   isPending?: boolean;
 }
 
@@ -37,7 +37,7 @@ export function FlashcardSuggestionItem({
     setIsEditing(false);
   };
 
-  const handleStatusChange = async (newStatus: 'approved' | 'rejected' | 'pending') => {
+  const handleStatusChange = async (newStatus: "approved" | "rejected" | "pending") => {
     setIsChangingStatus(true);
     try {
       await onStatusChange(suggestion.id, newStatus);
@@ -48,17 +48,17 @@ export function FlashcardSuggestionItem({
 
   const getStatusStyles = () => {
     switch (suggestion.status) {
-      case 'approved':
-        return 'border-green-500 bg-green-50';
-      case 'rejected':
-        return 'border-red-500 bg-red-50 opacity-50';
+      case "approved":
+        return "border-green-500 bg-green-50";
+      case "rejected":
+        return "border-red-500 bg-red-50 opacity-50";
       default:
-        return 'border-gray-200';
+        return "";
     }
   };
 
   return (
-    <Card className={`border-2 ${getStatusStyles()} relative`}>
+    <Card className={`${getStatusStyles()} relative`}>
       {(isPending || isChangingStatus) && (
         <div className="absolute inset-0 bg-white/50 flex items-center justify-center z-10">
           <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
@@ -93,37 +93,40 @@ export function FlashcardSuggestionItem({
           </>
         )}
       </CardContent>
-      <CardFooter className="flex gap-2 flex-wrap">
+      <CardFooter className="flex gap-2 flex-wrap p-4">
         {isEditing ? (
           <>
-            <Button onClick={handleSaveEdit} variant="default">
+            <Button onClick={handleSaveEdit} variant="default" size="tiny">
               Zapisz
             </Button>
-            <Button onClick={handleCancelEdit} variant="outline">
+            <Button onClick={handleCancelEdit} variant="outline" size="tiny">
               Anuluj
             </Button>
           </>
         ) : (
           <>
             <Button
-              onClick={() => handleStatusChange('approved')}
+              onClick={() => handleStatusChange("approved")}
               variant="default"
-              className="bg-green-600 hover:bg-green-700"
-              disabled={suggestion.status === 'rejected' || isPending || isChangingStatus}
+              size="tiny"
+              className="bg-green-200 hover:bg-green-300"
+              disabled={suggestion.status === "rejected" || isPending || isChangingStatus}
             >
               Zatwierdź
             </Button>
             <Button
-              onClick={() => handleStatusChange('rejected')}
+              onClick={() => handleStatusChange("rejected")}
               variant="destructive"
-              disabled={suggestion.status === 'approved' || isPending || isChangingStatus}
+              size="tiny"
+              disabled={suggestion.status === "approved" || isPending || isChangingStatus}
             >
               Odrzuć
             </Button>
             <Button
               onClick={() => setIsEditing(true)}
               variant="outline"
-              disabled={suggestion.status !== 'pending' || isPending || isChangingStatus}
+              size="tiny"
+              disabled={suggestion.status !== "pending" || isPending || isChangingStatus}
             >
               Edytuj
             </Button>
@@ -132,4 +135,4 @@ export function FlashcardSuggestionItem({
       </CardFooter>
     </Card>
   );
-} 
+}

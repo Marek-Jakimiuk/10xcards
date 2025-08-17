@@ -18,4 +18,3 @@ AI - Komunikacja z modelami przez usługę Openrouter.ai:
 CI/CD i Hosting:
 - GitLab Actions do tworzenia pipeline’ów CI/CD
 - GitLab do hostowania aplikacji za pośrednictwem obrazu docker
-  

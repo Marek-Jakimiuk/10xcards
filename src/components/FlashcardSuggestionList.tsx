@@ -1,10 +1,11 @@
-import type { SuggestionViewModel } from '../types';
-import { FlashcardSuggestionItem } from './FlashcardSuggestionItem';
+import type { SuggestionViewModel } from "../types";
+import { FlashcardSuggestionItem } from "./FlashcardSuggestionItem";
+import { Card, CardContent } from "./ui/card";
 
 interface FlashcardSuggestionListProps {
   suggestions: SuggestionViewModel[];
   onSuggestionUpdate: (id: string, updatedData: { przod: string; tyl: string }) => void;
-  onSuggestionStatusChange: (id: string, status: 'approved' | 'rejected' | 'pending') => Promise<void>;
+  onSuggestionStatusChange: (id: string, status: "approved" | "rejected" | "pending") => Promise<void>;
   pendingSaves?: Set<string>;
 }
 
@@ -20,8 +21,13 @@ export function FlashcardSuggestionList({
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold mb-4">Sugerowane fiszki ({suggestions.length})</h2>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <Card className="shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+        <CardContent>
+          <h2 className="text-4xl font-semibold">Sugerowane fiszki ({suggestions.length})</h2>
+        </CardContent>
+      </Card>
+      {/* <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-1"> */}
+      <div className="grid gap-4 cols-1">
         {suggestions.map((suggestion) => (
           <FlashcardSuggestionItem
             key={suggestion.id}
@@ -34,4 +40,4 @@ export function FlashcardSuggestionList({
       </div>
     </div>
   );
-} 
+}

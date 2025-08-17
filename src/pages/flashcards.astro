@@ -1,0 +1,24 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { FlashcardsView } from "../components/FlashcardsView";
+
+// Get user from supabase session
+const { supabase } = Astro.locals;
+const {
+  data: { user },
+} = await supabase.auth.getUser();
+
+// Redirect if not authenticated
+if (!user) {
+  return Astro.redirect("/login");
+}
+
+// Disable prerendering as this view depends on user session
+export const prerender = false;
+---
+
+<Layout title="Moje Fiszki">
+  <main class="container mx-auto px-4 py-8">
+    <FlashcardsView client:load userId={user.id} />
+  </main>
+</Layout>

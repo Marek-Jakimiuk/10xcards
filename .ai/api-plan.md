@@ -2,57 +2,85 @@
 
 ## 1. Resources
 
-1. **Users**
-   - Database Table: `users`
-   - Key Fields: `id`, `email`, `created_at`, `role`
+1. **Users** (`users` table):
+  - Key Fields: `id`, `email`, `created_at`, `role`
+  - Relationship: One user can have many decks, flashcards, history records, and logs.
    - Note: Managed by Supabase Auth and enforced via RLS.
 
-2. **Decks**
-   - Database Table: `decks`
-   - Key Fields: `id`, `user_id`, `name`, `description`, `created_at`, `updated_at`
-   - Relationship: Each deck belongs to a user.
 
-3. **Flashcards**
-   - Database Table: `fiszki`
-   - Key Fields: `id`, `user_id`, `deck_id`, `przod` (front), `tyl` (back), `status` (allowed values: 'zatwierdzona', 'odrzucona', 'oczekująca'), `metadane`, `created_at`, `updated_at`
-   - Relationship: Belongs to a user and may be associated with a deck.
+2. **Decks** (`decks` table):
+  - Key Fields: `id`, `user_id`, `name`, `description`, `created_at`, `updated_at`
+  - Relationship: Each deck belongs to a user and can contain many flashcards.
 
-4. **Flashcards History & Logs** (Internal Usage)
-   - Tables: `fiszki_history` and `fiszki_logs`
-   - Purpose: Version tracking and logging actions on flashcards. Typically not exposed directly via public API.
+3. **Flashcards** (`fiszki` table):
+  - Key Fields: `id`, `user_id`, `deck_id`, `przod` (front), `tyl` (back), `status` (`zatwierdzona`, `odrzucona`, `oczekująca`), `metadane`, `created_at`, `updated_at`
+  - Relationship: Each flashcard belongs to a user and an optional deck; has many history entries and logs.
 
----
+4. **Flashcards History & Logs** (`fiszki_history`, `fiszki_logs` tables):
+  - Key Fields History: `history_id`, `fiszka_id`, `user_id`, `version_number`, `edited_at`
+  - Key Fields Logs: `log_id`, `fiszka_id`, `user_id`, `action`, `log_timestamp`
+  - Relationship: History and log entries belong to a flashcard and user; internal usage only.
 
 ## 2. Endpoints
 
-### B. Flashcards Endpoints
+### Flashcards Endpoints
 
 1. **List Flashcards**
+
    - **Method:** GET
    - **URL:** `/api/flashcards`
-   - **Description:** Retrieves a paginated list of flashcards for the authenticated user. Supports filtering by deck and status.
+   - **Description:** Retrieve a paginated list of authenticated user. Supports filtering by `deck_id` and `status`.
    - **Query Parameters:**
-     - `page` (optional, default: 1)
-     - `limit` (optional, default: 20)
-     - `deckId` (optional): Filter by deck
-     - `status` (optional): Filter by flashcard status
-   - **Response:**
+     - `page` (integer, default 1)
+     - `limit` (integer, default 20)
+     - `deck_id` (UUID, optional)
+     - `status` (`zatwierdzona`, `odrzucona`, `oczekująca`, optional)
+   - **Response 200:**
      ```json
      {
-       "flashcards": [ { "id": "...", "przod": "...", "tyl": "...", "status": "..." } ],
+       "flashcards": [
+         {
+           "id": "...",
+           "przod": "...",
+           "tyl": "...",
+           "status": "...",
+           "deck_id": "...",
+           "created_at": "...",
+           "updated_at": "..."
+         }
+       ],
        "pagination": { "page": 1, "limit": 20, "total": 100 }
      }
      ```
+   - **Errors:**
+     - 400 Bad Request: Invalid query parameters.
+     - 401 Unauthorized: Authentication required.
+     - 403 Forbidden: Access denied.
+     - 500 Internal Server Error.
 
 2. **Retrieve a Single Flashcard**
    - **Method:** GET
    - **URL:** `/api/flashcards/{id}`
    - **Description:** Retrieves details of a specific flashcard.
-   - **Response:**
+   - **Response 200:**
      ```json
-     { "id": "...", "przod": "...", "tyl": "...", "status": "...", "deck_id": "..." }
+     {
+       "id": "...",
+       "przod": "...",
+       "tyl": "...",
+       "status": "...",
+       "deck_id": "...",
+       "created_at": "...",
+       "updated_at": "..."
+     }
      ```
-3. **Create Flashcards**
+   - **Errors:**
+     - 401 Unauthorized: Authentication required.
+     - 403 Forbidden: Access denied.
+     - 404 Not Found: Flashcard not found.
+     - 500 Internal Server Error.
+
+3. **Create Flashcards** (Bulk)
    - **Method:** POST
    - **URL:** `/api/flashcards`
    - **Description:** Creates one or more flashcard entries. Used for both manual flashcard creation and AI-generated flashcards.
@@ -62,8 +90,8 @@
        "deck_id": "optional-deck-id",
        "flashcards": [
          {
-           "przod": "Front of the flashcard (max 200 chars)",
-           "tyl": "Back of the flashcard (max 500 chars)",
+           "przod": "Front (≤200 chars)",
+           "tyl": "Back (≤500 chars)",
            "status": "oczekująca" // default status for manually created flashcards
          },
          {
@@ -74,195 +102,213 @@
        ]
      }
      ```
-   - **Response:**
-     - **Success (201):** Array of newly created flashcard objects.
-     - **Error (400):** If validation fails:
-       ```json
-       {
-         "error": "Validation Error",
-         "details": [
-           {
-             "field": "przod",
-             "message": "Front text exceeds maximum length of 200 characters"
-           },
-           {
-             "field": "tyl", 
-             "message": "Back text exceeds maximum length of 500 characters"
-           }
-         ]
-       }
-       ```
-     - **Error (400):** If validation fails:
-       ```json
-       {
-         "error": "Validation Error",
-         "details": [
-           {
-             "field": "przod",
-             "message": "Front text exceeds maximum length of 200 characters"
-           },
-           {
-             "field": "tyl", 
-             "message": "Back text exceeds maximum length of 500 characters"
-           }
-         ]
-       }
-       ```
+   - **Response 201:**
+     ```json
+     [
+       { "id": "...", "przod": "...", "tyl": "...", "status": "...", "deck_id": "...", "created_at": "...", "updated_at": "..." },
+       ...
+     ]
+     ```
+   - **Errors:**
+     - 400 Bad Request: Validation errors.
+     - 401 Unauthorized: Authentication required.
+     - 403 Forbidden: Cannot create for another user's deck.
+     - 500 Internal Server Error.
 
 4. **Update a Flashcard**
+
    - **Method:** PUT
    - **URL:** `/api/flashcards/{id}`
-   - **Description:** Updates an existing flashcard. Allows editing of text and status.
-   - **Request Payload:**
+   - **Request:**
      ```json
-     {
-       "przod": "Updated front text",
-       "tyl": "Updated back text",
-       "status": "zatwierdzona" // or one of the allowed statuses
-     }
+     { "przod": "Updated front", "tyl": "Updated back", "status": "zatwierdzona" }
      ```
-   - **Response:**
-     - **Success (200):** Updated flashcard details.
-     - **Error (400):** If validations fail (e.g., exceeding character limits or invalid status).
+   - **Response 200:** Updated flashcard object.
+   - **Errors:**
+     - 400 Bad Request: Validation errors on update.
+     - 401 Unauthorized: Authentication required.
+     - 403 Forbidden: Cannot update another user's flashcard.
+     - 404 Not Found: Flashcard not found.
+     - 500 Internal Server Error.
 
 5. **Delete a Flashcard**
+
    - **Method:** DELETE
    - **URL:** `/api/flashcards/{id}`
-   - **Description:** Deletes a flashcard. Requires confirmation by the front end before deletion.
-   - **Response:**
-     - **Success (200):** Confirmation message.
-     - **Error (404):** If the flashcard is not found.
+   - **Response 200:**
+     ```json
+     { "message": "Flashcard deleted." }
+     ```
+   - **Errors:**
+     - 401 Unauthorized: Authentication required.
+     - 403 Forbidden: Cannot delete another user's flashcard.
+     - 404 Not Found: Flashcard not found.
+     - 500 Internal Server Error.
 
 6. **Generate Flashcards via AI**
+
    - **Method:** POST
    - **URL:** `/api/flashcards/generate`
-   - **Description:** Accepts a block of text (between 1000 and 10000 characters) and returns a list of flashcard suggestions generated by an LLM via an external API.
-   - **Request Payload:**
+   - **Description:** Generate flashcard suggestions via LLM.
+   - **Request:**
+     ```json
+     { "text": "<1000–10000 chars>" }
+     ```
+   - **Response 200:**
      ```json
      {
-       "text": "Paste your text here..."
+       "suggestions": [{ "suggestion_id": "...", "przod": "...", "tyl": "..." }]
      }
      ```
-   - **Response:**
+   - **Errors:**
+     - 400 Bad Request: Invalid or missing input.
+     - 401 Unauthorized.
+     - 429 Too Many Requests: Rate limit exceeded.
+     - 500 Internal Server Error: LLM failure.
+
+7. **Accept/Reject/Edit Suggestion**
+
+   - **Method:** PATCH
+   - **URL:** `/api/flashcards/suggestions/{suggestion_id}`
+   - **Request:**
      ```json
-     {
-       "suggestions": [
-         { "przod": "Question 1?", "tyl": "Answer 1." },
-         { "przod": "Question 2?", "tyl": "Answer 2." }
-       ]
-     }
+     { "action": "accept" | "reject" | "edit", "przod"?: "...", "tyl"?: "..." }
      ```
-   - **Note:** Must validate that the text length is within allowed limits. On acceptance of suggestions, a separate update (or create) endpoint will update the flashcard status to 'zatwierdzona'.
+   - **Response 200:** Confirmation or updated suggestion object.
+   - **Errors:**
+     - 400 Bad Request: Invalid action or payload.
+     - 401 Unauthorized: Authentication required.
+     - 403 Forbidden: Cannot modify another user's suggestion.
+     - 404 Not Found: Suggestion not found.
+     - 500 Internal Server Error.
 
----
+8. **Discard Suggestion**
+   - **Method:** DELETE
+   - **URL:** `/api/flashcards/suggestions/{suggestion_id}`
+   - **Response 200:**
+     ```json
+     { "message": "Suggestion discarded." }
+     ```
+   - **Errors:**
+     - 401 Unauthorized: Authentication required.
+     - 403 Forbidden: Cannot delete another user's suggestion.
+     - 404 Not Found: Suggestion not found.
+     - 500 Internal Server Error.
 
-### C. Decks Endpoints
+### Decks Endpoints
 
 1. **List Decks**
-   - **Method:** GET
-   - **URL:** `/api/decks`
-   - **Description:** Retrieves a list of all decks for the authenticated user.
-   - **Response:**
+   - Method: GET
+   - URL: `/api/decks`
+   - Response 200:
      ```json
-     {
-       "decks": [ { "id": "...", "name": "Deck Name", "description": "Optional description" } ]
-     }
+     { "decks": [{ "id": "...", "name": "...", "description": "...", "created_at": "...", "updated_at": "..." }] }
      ```
+   - Errors:
+     - 401 Unauthorized: Authentication required.
+     - 500 Internal Server Error.
 
 2. **Create a New Deck**
-   - **Method:** POST
-   - **URL:** `/api/decks`
-   - **Description:** Creates a new deck for organizing flashcards.
-   - **Request Payload:**
+   - Method: POST
+   - URL: `/api/decks`
+   - Request:
      ```json
-     {
-       "name": "New Deck",
-       "description": "Description for the deck"
-     }
+     { "name": "Deck Name", "description": "Optional" }
      ```
-   - **Response:**
-     - **Success (201):** Newly created deck details.
+   - Response 201: Deck object.
+   - Errors:
+     - 400 Bad Request: Validation errors (e.g., missing name).
+     - 401 Unauthorized: Authentication required.
+     - 500 Internal Server Error.
 
-3. **Retrieve a Deck**
-   - **Method:** GET
-   - **URL:** `/api/decks/{id}`
-   - **Description:** Retrieves details of a specific deck, including associated flashcards if needed.
+3. **Retrieve Deck**
+   - Method: GET
+   - URL: `/api/decks/{id}`
+   - Response 200: Deck object (optionally include `flashcards` if `includeFlashcards=true`).
+   - Errors:
+     - 401 Unauthorized: Authentication required.
+     - 403 Forbidden: Cannot access another user's deck.
+     - 404 Not Found: Deck not found.
+     - 500 Internal Server Error.
 
-4. **Update a Deck**
-   - **Method:** PUT
-   - **URL:** `/api/decks/{id}`
-   - **Description:** Updates deck information.
-   - **Request Payload:**
+4. **Update Deck**
+   - Method: PUT
+   - URL: `/api/decks/{id}`
+   - Request:
      ```json
-     {
-       "name": "Updated Deck Name",
-       "description": "Updated description"
-     }
+     { "name": "Updated", "description": "Updated" }
      ```
-   - **Response:**
-     - **Success (200):** Updated deck details.
+   - Response 200: Updated deck object.
+   - Errors:
+     - 400 Bad Request: Validation errors.
+     - 401 Unauthorized: Authentication required.
+     - 403 Forbidden: Cannot update another user's deck.
+     - 404 Not Found: Deck not found.
+     - 500 Internal Server Error.
 
-5. **Delete a Deck**
-   - **Method:** DELETE
-   - **URL:** `/api/decks/{id}`
-   - **Description:** Deletes a deck. If flashcards are linked, they should either be reassigned or set to null (as per DB schema).
-   - **Response:**
-     - **Success (200):** Confirmation of deletion.
+5. **Delete Deck**
+   - Method: DELETE
+   - URL: `/api/decks/{id}`
+   - Response 200:
+     ```json
+     { "message": "Deck deleted." }
+     ```
+   - Errors:
+     - 401 Unauthorized: Authentication required.
+     - 403 Forbidden: Cannot delete another user's deck.
+     - 404 Not Found: Deck not found.
+     - 500 Internal Server Error.
 
----
+### Study Session Endpoint
 
-### D. Study Session Endpoint
-
-1. **Start a Study Session**
-   - **Method:** GET
-   - **URL:** `/api/study-session`
-   - **Description:** Retrieves a set of flashcards for a study session based on spaced repetition algorithms. The selection may be based on criteria such as user performance and scheduled review times.
-   - **Query Parameters (optional):**
-     - `deckId`: To filter flashcards by a specific deck
-   - **Response:**
+1. **Get Learning Session**
+   - Method: GET
+   - URL: `/api/sessions/learning`
+   - Description: Fetch flashcards for spaced-repetition session.
+   - Query Params: `page`, `limit`, `deck_id` (UUID, optional)
+   - Response 200:
      ```json
      {
-       "session": [ { "id": "...", "przod": "Question?", "tyl": "Answer." } ],
+       "session": [{ "id": "...", "przod": "...", "tyl": "..." }],
        "session_info": { "total": 10, "current_index": 0 }
      }
      ```
+   - Errors:
+     - 401 Unauthorized: Authentication required.
+     - 500 Internal Server Error.
 
----
+## 3. Authentication & Authorization
 
-## 3. Authentication and Authorization
+- Mechanism: All endpoints (except `/api/auth/register` and `/api/auth/login`) require authentication using JWT tokens issued by Supabase Auth.
+- Implementation: Clients must include an Authorization header: `Authorization: Bearer <token>`.
+- RLS Enforcement: Supabase enforces Row Level Security, ensuring per-user data isolation.
 
-- **Mechanism:** All endpoints (except `/api/auth/register` and `/api/auth/login`) require authentication using JWT tokens issued by Supabase Auth.
-- **Implementation:** Clients must include an Authorization header in the format: `Authorization: Bearer <token>`.
-- **RLS Enforcement:** The Supabase database enforces Row Level Security (RLS) ensuring that users can only access their own data.
+## 4. Validation & Business Logic
 
----
+- **Flashcard Validation**: `przod` ≤200 chars, `tyl` ≤500 chars; `status` ∈ [`zatwierdzona`,`odrzucona`,`oczekująca`].
+- **Generate Validation**: `text` length 1000–10000 chars; (rate limiting planned: e.g. 10/min). <!-- PLAN: Add rate-limiting middleware on generation endpoint. -->
+- **Bulk Create**: ensure array payload; validation per item.
+- **Update via PUT**: full object update.
+- **Suggestion Workflow**: POST returns wrapper; PATCH & DELETE operate on in-memory suggestions until accepted then persisted as flashcards.
 
-## 4. Validation and Business Logic
-
-1. **Input Validation:**
-   - Ensure that flashcard fields meet length requirements (e.g., `przod` <= 200 chars, `tyl` <= 500 chars).
-   - For flashcard generation, validate that the submitted text is between 1000 and 10000 characters.
-   - Verify allowed status values: only 'zatwierdzona', 'odrzucona', or 'oczekująca'.
-
-2. **Business Logic Mapping:**
-   - **Registration/Login:** Use standard authentication flows backed by Supabase Auth.
-   - **Flashcard Generation:** On receiving text input, server-side logic calls an external LLM API (e.g., via Openrouter.ai) to generate flashcard suggestions. These suggestions are returned as a list, and upon user approval, the flashcards are created/updated with status 'zatwierdzona'.
-   - **Editing and Approval:** Separate endpoints exist to update flashcards, allowing users to correct or approve AI-generated content.
-   - **Study Session:** Use algorithms for spaced repetition to select flashcards based on user performance. The endpoint provides the required flashcards along with session metadata.
-
-3. **Error Handling and Status Codes:**
+- **Error Handling and Status Codes:**
    - **200 OK / 201 Created:** For successful operations.
    - **400 Bad Request:** For validation errors or malformed requests.
    - **401 Unauthorized:** When authentication fails or is missing.
    - **404 Not Found:** When requested resources do not exist.
    - **500 Internal Server Error:** For unexpected failures.
 
-4. **Performance and Security Considerations:**
+- **Performance and Security Considerations:**
    - **Pagination, Filtering, and Sorting:** Implemented on GET list endpoints to efficiently navigate large datasets.
    - **Rate Limiting:** Consider applying rate limits on endpoints, especially on flashcard generation to prevent abuse.
    - **Data Security:** All sensitive operations require authentication and the backend should ensure that RLS policies are in place at the database level.
 
----
+
+## 5. Assumptions
+
+- Supabase Auth manages authentication; RLS enforces per-user isolation.
+- Histories & logs remain internal and are not exposed in public API.
+- 
 
 *Assumptions:*
 - The external AI service for flashcard generation is reliable and its API response is normalized to our flashcard schema.

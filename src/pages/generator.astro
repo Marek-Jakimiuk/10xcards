@@ -1,9 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { FlashcardGenerator } from "../components/FlashcardGenerator";
-import Toaster from "../components/ui/sonner";
-import type { User } from "../types";
-import { DEFAULT_USER_ID } from "@/db/supabase.client";
+// import { DEFAULT_USER_ID } from "@/db/supabase.client";
 
 // Get user from supabase session
 const { supabase } = Astro.locals;
@@ -12,20 +10,14 @@ const {
 } = await supabase.auth.getUser();
 
 // Redirect if not authenticated
-// if (!user) {
-//   return Astro.redirect('/login');
-// }
+if (!user) {
+  return Astro.redirect("/login");
+}
 ---
 
 <Layout title="Generator Fiszek">
   <main class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-6">Generator Fiszek</h1>
-    <p class="text-gray-600 mb-8">
-      Wklej tekst poniżej, aby automatycznie wygenerować propozycje fiszek. System przeanalizuje tekst i zaproponuje
-      fiszki, które możesz zatwierdzić, odrzucić lub edytować.
-    </p>
-    <!-- <FlashcardGenerator client:load userId={user.id} /> -->
-    <FlashcardGenerator client:load userId={DEFAULT_USER_ID} />
+    <FlashcardGenerator client:load userId={user.id} />
+    <!-- <FlashcardGenerator client:load userId={DEFAULT_USER_ID} /> -->
   </main>
-  <Toaster client:load />
 </Layout>

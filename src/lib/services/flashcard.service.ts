@@ -1,9 +1,17 @@
 // Import wymaganych typów
-import type { SupabaseClient } from "@supabase/supabase-js";
-import type { FlashcardListDTO, FlashcardDetailDTO, FlashcardCreateInput, FlashcardUpdateCommand } from "../../types";
+import type {
+  FlashcardDTO,
+  FlashcardDetailDTO,
+  FlashcardCreateInput,
+  FlashcardUpdateCommand,
+  TypedSupabaseClient,
+  User,
+  FlashcardStatus,
+  FiszkaRow,
+} from "../../types";
 
 // Funkcja do pobierania fiszek z paginacją i opcjonalnym filtrowaniem
-export async function listFlashcards({
+export async function getFlashcards({
   supabase,
   user,
   page,
@@ -11,31 +19,32 @@ export async function listFlashcards({
   deckId,
   status,
 }: {
-  supabase: SupabaseClient<any>;
-  user: any;
+  supabase: TypedSupabaseClient;
+  user: User;
   page: number;
   limit: number;
   deckId?: string;
-  status?: "oczekująca" | "zatwierdzona" | "odrzucona";
-}): Promise<{ flashcards: FlashcardListDTO[]; totalCount: number }> {
+  status?: FlashcardStatus;
+}): Promise<{ flashcards: FlashcardDTO[]; totalCount: number }> {
   const start = (page - 1) * limit;
   const end = page * limit - 1;
-  let query = supabase.from("fiszki").select("*", { count: "exact" });
+  let query = supabase.from("fiszki").select("*", { count: "exact" }).eq("user_id", user.id);
   if (deckId) {
     query = query.eq("deck_id", deckId);
   }
   if (status) {
     query = query.eq("status", status);
   }
-  const { data, error, count } = await query.range(start, end);
+  const { data, error, count } = await query.order("created_at", { ascending: false }).range(start, end);
   if (error) {
     throw new Error(error.message);
   }
-  const flashcards: FlashcardListDTO[] = (data || []).map((item: any) => ({
+  const flashcards: FlashcardDTO[] = (data || []).map((item: FiszkaRow) => ({
     id: item.id,
     przod: item.przod,
     tyl: item.tyl,
     status: item.status,
+    deck_id: item.deck_id,
   }));
   return { flashcards, totalCount: count ?? 0 };
 }
@@ -47,11 +56,11 @@ export async function createFlashcards({
   deck_id,
   flashcards,
 }: {
-  supabase: SupabaseClient<any>;
+  supabase: TypedSupabaseClient;
   userId: string;
   deck_id?: string;
   flashcards: FlashcardCreateInput[];
-}): Promise<FlashcardListDTO[]> {
+}): Promise<FlashcardDTO[]> {
   const flashcardsToInsert = flashcards.map((fc) => ({
     ...fc,
     deck_id: deck_id || null,
@@ -61,12 +70,12 @@ export async function createFlashcards({
   if (error) {
     throw new Error(error.message);
   }
-  const result: FlashcardListDTO[] = (data || []).map((item: any) => ({
+  const result: FlashcardDTO[] = (data || []).map((item: FiszkaRow) => ({
     id: item.id,
-    user_id: item.user_id,
     przod: item.przod,
     tyl: item.tyl,
     status: item.status,
+    deck_id: item.deck_id,
   }));
   return result;
 }
@@ -77,11 +86,11 @@ export async function getFlashcardById({
   user,
   id,
 }: {
-  supabase: SupabaseClient<any>;
-  user: any;
+  supabase: TypedSupabaseClient;
+  user: User;
   id: string;
 }): Promise<FlashcardDetailDTO> {
-  const { data, error } = await supabase.from("fiszki").select("*").eq("id", id).single();
+  const { data, error } = await supabase.from("fiszki").select("*").eq("id", id).eq("user_id", user.id).single();
   if (error || !data) {
     throw new Error("Flashcard not found");
   }
@@ -102,12 +111,18 @@ export async function updateFlashcard({
   id,
   updateData,
 }: {
-  supabase: SupabaseClient<any>;
-  user: any;
+  supabase: TypedSupabaseClient;
+  user: User;
   id: string;
   updateData: FlashcardUpdateCommand;
 }): Promise<FlashcardDetailDTO> {
-  const { data, error } = await supabase.from("fiszki").update(updateData).eq("id", id).select().single();
+  const { data, error } = await supabase
+    .from("fiszki")
+    .update(updateData)
+    .eq("id", id)
+    .eq("user_id", user.id)
+    .select()
+    .single();
   if (error) {
     throw new Error(error.message);
   }
@@ -127,11 +142,11 @@ export async function deleteFlashcard({
   user,
   id,
 }: {
-  supabase: SupabaseClient<any>;
-  user: any;
+  supabase: TypedSupabaseClient;
+  user: User;
   id: string;
 }): Promise<void> {
-  const { error } = await supabase.from("fiszki").delete().eq("id", id);
+  const { error } = await supabase.from("fiszki").delete().eq("id", id).eq("user_id", user.id);
   if (error) {
     throw new Error(error.message);
   }

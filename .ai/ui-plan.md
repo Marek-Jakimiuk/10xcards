@@ -14,7 +14,7 @@ Aplikacja 10x-cards składa się z kilku głównych widoków, które wspólnie t
 - **Kluczowe komponenty:** `AuthForm`, pola input, przyciski, inline error feedback, popup alert (Shadcn/ui).
 - **UX, dostępność i bezpieczeństwo:** Prosty formularz, Dostępne etykiety, kontrast kolorów, zabezpieczenie wejścia przez podstawowe mechanizmy walidacji.
 
-### Dashboard / Widok generowania fiszek
+### Dashboard
 - **Ścieżka widoku:** `/dashboard`
 - **Główny cel:** Zapewnienie użytkownikowi przeglądu najważniejszych funkcji aplikacji i szybkiego dostępu do generowania oraz zarządzania fiszkami.
 - **Kluczowe informacje:** Podsumowanie ostatnich operacji, skróty do generowania fiszek, przejście do panelu użytkownika i sesji powtórzeniowych.

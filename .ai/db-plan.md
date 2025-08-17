@@ -103,4 +103,4 @@ CREATE POLICY user_isolation ON fiszki
 - Mechanizm wersjonowania w tabeli fiszki_history umożliwia śledzenie zmian w treści fiszek.
 - Tabela fiszki_logs rejestruje operacje na fiszkach, wspierając analizę statystyk i śledzenie działań użytkowników.
 - RLS gwarantuje, że użytkownicy mają dostęp tylko do swoich danych, zwiększając bezpieczeństwo aplikacji.
-*/ 
+*/

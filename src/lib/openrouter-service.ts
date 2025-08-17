@@ -244,6 +244,13 @@ export class OpenRouterService {
 
   /** @internal */
   private createPayload(userMessage: string): Payload {
+    console.log("");
+    console.log("");
+    console.log("");
+    console.log("TC:  ~ createPayload ~ userMessage:", userMessage);
+    console.log("");
+    console.log("");
+    console.log("");
     return {
       messages: [
         { role: "system", content: this.config.systemMessage },
@@ -415,7 +422,13 @@ export class OpenRouterService {
   }
 
   public async sendStructuredChatMessage<T>(userMessage: string, responseSchema: z.ZodType<T>): Promise<T> {
+    console.log("");
+    console.log("");
+    console.log("111");
+    console.log("🤖 [FlashcardGenerator] Starting structured chat message call with user message:", userMessage);
+    console.log("TC:  ~ sendStructuredChatMessage ~ responseSchema:", responseSchema);
     const response = await this.sendChatMessage(userMessage);
+    console.log("TC:  ~ response:", response);
     return this.validateJsonResponse(response.answer, responseSchema);
   }
 }

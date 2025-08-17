@@ -1,14 +1,12 @@
 // Import necessary modules and types
-import { z } from 'zod';
-import type { FlashcardListDTO, FlashcardListResponseDTO } from '../../../types';
-import { listFlashcards, createFlashcards } from '../../../lib/services/flashcard.service';
-import { DEFAULT_USER_ID } from '@/db/supabase.client';
+import { z } from "zod";
+import { getFlashcards, createFlashcards } from "../../../lib/services/flashcard.service";
 
 // Disable prerender for dynamic API endpoint
 export const prerender = false;
 
 // GET /api/flashcards - List flashcards with pagination and optional filtering
-export async function GET({ request, locals }: { request: Request, locals: any }) {
+export async function GET({ request, locals }: { request: Request; locals: App.Locals }) {
   try {
     // Parse query parameters from the URL
     const url = new URL(request.url);
@@ -16,10 +14,16 @@ export async function GET({ request, locals }: { request: Request, locals: any }
 
     // Define the query schema using Zod
     const querySchema = z.object({
-      page: z.preprocess(arg => Number(arg), z.number().int().min(1)).optional().default(1),
-      limit: z.preprocess(arg => Number(arg), z.number().int().min(1).max(100)).optional().default(20),
+      page: z
+        .preprocess((arg) => Number(arg), z.number().int().min(1))
+        .optional()
+        .default(1),
+      limit: z
+        .preprocess((arg) => Number(arg), z.number().int().min(1).max(100))
+        .optional()
+        .default(20),
       deckId: z.string().uuid().optional(),
-      status: z.enum(['oczekująca', 'zatwierdzona', 'odrzucona']).optional()
+      status: z.enum(["oczekująca", "zatwierdzona", "odrzucona"]).optional(),
     });
 
     // Validate and parse query parameters
@@ -27,19 +31,28 @@ export async function GET({ request, locals }: { request: Request, locals: any }
     const { page, limit, deckId, status } = parsedQuery;
 
     // Retrieve authenticated user from Supabase session
-    const { data: { user }, error: userError } = await locals.supabase.auth.getUser();
+    const {
+      data: { user },
+      error: userError,
+    } = await locals.supabase.auth.getUser();
     if (userError || !user) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
     }
 
+    // Convert Supabase User to our internal User type
+    const internalUser = {
+      id: user.id,
+      email: user.email ?? null,
+    };
+
     // Use service function to list flashcards
-    const { flashcards, totalCount } = await listFlashcards({
+    const { flashcards, totalCount } = await getFlashcards({
       supabase: locals.supabase,
-      user,
+      user: internalUser,
       page,
       limit,
       deckId,
-      status
+      status,
     });
 
     // Prepare the response DTO
@@ -48,55 +61,64 @@ export async function GET({ request, locals }: { request: Request, locals: any }
       pagination: {
         page,
         limit,
-        total: totalCount
-      }
+        total: totalCount,
+      },
     };
 
     return new Response(JSON.stringify(responseDto), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { "Content-Type": "application/json" },
     });
-  } catch (err: any) {
-    console.error('Error in GET /api/flashcards:', err);
-    return new Response(JSON.stringify({ error: 'Internal Server Error', details: err.message }), { status: 500 });
+  } catch (err: unknown) {
+    console.error("Error in GET /api/flashcards:", err);
+    const errorMessage = err instanceof Error ? err.message : "Unknown error";
+    return new Response(JSON.stringify({ error: "Internal Server Error", details: errorMessage }), { status: 500 });
   }
 }
 
 // POST /api/flashcards - Create new flashcards
-export async function POST({ request, locals }: { request: Request, locals: any }) {
+export async function POST({ request, locals }: { request: Request; locals: App.Locals }) {
   try {
     // Parse and validate request body
     const body = await request.json();
     const flashcardCreateSchema = z.object({
       deck_id: z.string().uuid().optional(),
-      flashcards: z.array(z.object({
-        przod: z.string().max(200),
-        tyl: z.string().max(500),
-        status: z.enum(['oczekująca', 'zatwierdzona', 'odrzucona'])
-      })).nonempty()
+      flashcards: z
+        .array(
+          z.object({
+            przod: z.string().max(200),
+            tyl: z.string().max(500),
+            status: z.enum(["oczekująca", "zatwierdzona", "odrzucona"]),
+          })
+        )
+        .nonempty(),
     });
     const command = flashcardCreateSchema.parse(body);
 
-    // Retrieve authenticated user
-    // const { data: { user }, error: userError } = await locals.supabase.auth.getUser();
-    // if (userError || !user) {
-    //   return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
-    // }
+    // Get authenticated user
+    const {
+      data: { user },
+      error: userError,
+    } = await locals.supabase.auth.getUser();
+    if (userError || !user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
+    }
 
     // Use service function to create flashcards
     const createdFlashcards = await createFlashcards({
       supabase: locals.supabase,
-      userId: DEFAULT_USER_ID,
+      userId: user.id,
       deck_id: command.deck_id,
-      flashcards: command.flashcards
+      flashcards: command.flashcards,
     });
 
     return new Response(JSON.stringify({ flashcards: createdFlashcards }), {
       status: 201,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { "Content-Type": "application/json" },
     });
-  } catch (err: any) {
-    console.error('Error in POST /api/flashcards:', err);
-    return new Response(JSON.stringify({ error: 'Internal Server Error', details: err.message }), { status: 500 });
+  } catch (err: unknown) {
+    console.error("Error in POST /api/flashcards:", err);
+    const errorMessage = err instanceof Error ? err.message : "Unknown error";
+    return new Response(JSON.stringify({ error: "Internal Server Error", details: errorMessage }), { status: 500 });
   }
-} 
+}

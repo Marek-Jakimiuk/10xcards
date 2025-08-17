@@ -1,12 +1,16 @@
 ---
 import "../styles/global.css";
 import Toaster from "../components/ui/sonner";
+import UserMenu from "../components/ui/UserMenu";
 
 interface Props {
   title?: string;
 }
 
 const { title = "10x Astro Starter" } = Astro.props;
+
+// Get user from locals (set by middleware)
+const { user } = Astro.locals;
 ---
 
 <!doctype html>
@@ -16,10 +20,71 @@ const { title = "10x Astro Starter" } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="generator" content={Astro.generator} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
     <title>{title}</title>
   </head>
   <body>
-    <slot />
+    <div class="min-h-screen flex flex-col">
+      <header class="flex border-b border-black h-24" style="background-color: rgba(252, 211, 77, 0.5);">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+          <a href="/" class="text-xl font-bold">10x Cards</a>
+          <div>
+            {
+              user ? (
+                <UserMenu client:load email={user.email || ""} />
+              ) : (
+                <div class="flex gap-4">
+                  {Astro.url.pathname !== "/login" && (
+                    <a href="/login" class="hover:text-gray-900">
+                      Zaloguj się
+                    </a>
+                  )}
+                  {Astro.url.pathname !== "/register" && (
+                    <a href="/register" class="hover:text-gray-900">
+                      Rejestracja
+                    </a>
+                  )}
+                </div>
+              )
+            }
+          </div>
+        </div>
+      </header>
+      <main class="flex-1">
+        <slot />
+      </main>
+      <footer class="flex border-t border-black h-24" style="background-color: rgba(252, 211, 77, 0.5);">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+          <div class="text-lg text-gray-700">
+            © {new Date().getFullYear()} Made with ❤️ by <a
+              href="https://www.linkedin.com/in/marek-jakimiuk-whitefox/"
+              class="hover:text-gray-900 underline"
+              target="_blank"
+              rel="noopener noreferrer">Marek Jakimiuk</a
+            ><br />
+            W ramach kursu <a
+              href="https://www.10xdevs.pl/"
+              class="hover:text-gray-900 underline"
+              target="_blank"
+              rel="noopener noreferrer">10xDevs</a
+            > by
+            <a
+              href="https://przeprogramowani.pl/"
+              class="hover:text-gray-900 underline"
+              target="_blank"
+              rel="noopener noreferrer">Przeprogramowani.pl</a
+            >
+
+            Marcin Czarkowski i Przemek Smyrdek
+          </div>
+        </div>
+      </footer>
+    </div>
     <Toaster client:load />
   </body>
 </html>
