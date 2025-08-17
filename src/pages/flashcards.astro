@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { FlashcardsView } from "../components/FlashcardsView";
+import { viewTransitionsConfig } from "../config/view-transitions.config";
 
 // Get user from supabase session
 const { supabase } = Astro.locals;
@@ -18,7 +19,9 @@ export const prerender = false;
 ---
 
 <Layout title="Moje Fiszki">
-  <main class="container mx-auto px-4 py-8">
-    <FlashcardsView client:load userId={user.id} />
-  </main>
+  <div style={viewTransitionsConfig.pageTransitions.flashcardsPage ? "view-transition-name: flashcards-page;" : ""}>
+    <main class="container mx-auto px-4 py-8">
+      <FlashcardsView client:load userId={user.id} />
+    </main>
+  </div>
 </Layout>

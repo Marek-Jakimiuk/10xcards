@@ -124,3 +124,184 @@
 .container {
   max-width: 1024px;
 }
+
+/* Advanced View Transitions Animations with Feature Flags */
+@layer transitions {
+  /* Base animation styles using CSS custom properties */
+  :root {
+    /* Default values for feature flags */
+    --vt-enabled: 1;
+    --vt-flashcards-page: 1;
+    --vt-generator-page: 1;
+    --vt-auth-flip: 1;
+    --vt-auth-bounce: 1;
+    --vt-auth-fade: 1;
+    --vt-scale: 1;
+    --vt-slide-up: 1;
+    --vt-slide-down: 1;
+    --vt-morph-main: 1;
+    --vt-morph-logo: 1;
+    --vt-morph-header: 1;
+    --vt-morph-footer: 1;
+    
+    /* Timing variables */
+    --vt-timing-fast: 200ms;
+    --vt-timing-normal: 300ms;
+    --vt-timing-slow: 500ms;
+    --vt-timing-very-slow: 800ms;
+    
+    /* Easing variables */
+    --vt-easing-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --vt-easing-in: cubic-bezier(0.4, 0, 1, 1);
+    --vt-easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  /* Page-specific animations - only when flags are enabled */
+  [data-vt-flashcards="1"] ::view-transition-old(flashcards-page) {
+    animation: scale-down var(--vt-timing-normal) var(--vt-easing-out) forwards;
+  }
+
+  [data-vt-flashcards="1"] ::view-transition-new(flashcards-page) {
+    animation: scale-up var(--vt-timing-normal) var(--vt-easing-out) forwards;
+  }
+
+  [data-vt-generator="1"] ::view-transition-old(generator-page) {
+    animation: slide-out-down var(--vt-timing-normal) var(--vt-easing-in) forwards;
+  }
+
+  [data-vt-generator="1"] ::view-transition-new(generator-page) {
+    animation: slide-in-up var(--vt-timing-normal) var(--vt-easing-out) forwards;
+  }
+
+  /* Auth page animations */
+  [data-vt-auth-flip="1"] ::view-transition-old(auth-card) {
+    animation: flip-out var(--vt-timing-slow) var(--vt-easing-in) forwards;
+  }
+
+  [data-vt-auth-flip="1"] ::view-transition-new(auth-card) {
+    animation: flip-in var(--vt-timing-slow) var(--vt-easing-out) forwards;
+  }
+
+  [data-vt-auth-bounce="1"] ::view-transition-old(auth-title) {
+    animation: bounce-out var(--vt-timing-normal) var(--vt-easing-in) forwards;
+  }
+
+  [data-vt-auth-bounce="1"] ::view-transition-new(auth-title) {
+    animation: bounce-in var(--vt-timing-slow) var(--vt-easing-bounce) forwards;
+  }
+
+  [data-vt-auth-fade="1"] ::view-transition-old(auth-form) {
+    animation: fade-out-up var(--vt-timing-normal) var(--vt-easing-in) forwards;
+  }
+
+  [data-vt-auth-fade="1"] ::view-transition-new(auth-form) {
+    animation: fade-in-up var(--vt-timing-normal) var(--vt-easing-out) 0.2s forwards;
+    opacity: 0;
+  }
+
+  /* Main content slide animations */
+  [data-vt-main="1"] ::view-transition-old(main) {
+    animation: slide-out-right var(--vt-timing-normal) var(--vt-easing-out) forwards;
+  }
+
+  [data-vt-main="1"] ::view-transition-new(main) {
+    animation: slide-in-left var(--vt-timing-normal) var(--vt-easing-out) forwards;
+  }
+
+  /* Logo animations */
+  [data-vt-logo="1"] ::view-transition-old(logo),
+  [data-vt-logo="1"] ::view-transition-new(logo) {
+    animation-duration: var(--vt-timing-slow);
+    animation-timing-function: var(--vt-easing-bounce);
+  }
+
+  /* Header and footer morphing - disabled when flag is off */
+  [data-vt-header="1"] ::view-transition-old(header),
+  [data-vt-header="1"] ::view-transition-new(header) {
+    animation: none; /* Smooth morphing */
+  }
+
+  [data-vt-footer="1"] ::view-transition-old(footer),
+  [data-vt-footer="1"] ::view-transition-new(footer) {
+    animation: none; /* Smooth morphing */
+  }
+
+  /* Fallback - disable all animations when main flag is off */
+  [data-vt-enabled="0"] ::view-transition-old(*),
+  [data-vt-enabled="0"] ::view-transition-new(*) {
+    animation: none !important;
+  }
+
+  /* Keyframes */
+  @keyframes scale-down {
+    from { transform: scale(1); opacity: 1; }
+    to { transform: scale(0.9); opacity: 0; }
+  }
+
+  @keyframes scale-up {
+    from { transform: scale(1.1); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  @keyframes slide-out-down {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(100%); opacity: 0; }
+  }
+
+  @keyframes slide-in-up {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  @keyframes flip-out {
+    from { transform: rotateY(0); opacity: 1; }
+    to { transform: rotateY(-90deg); opacity: 0; }
+  }
+
+  @keyframes flip-in {
+    from { transform: rotateY(90deg); opacity: 0; }
+    to { transform: rotateY(0); opacity: 1; }
+  }
+
+  @keyframes bounce-out {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.1); }
+    100% { transform: scale(0); opacity: 0; }
+  }
+
+  @keyframes bounce-in {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.2); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  @keyframes fade-out-up {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(-20px); opacity: 0; }
+  }
+
+  @keyframes fade-in-up {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  /* Smooth morphing for navigation links */
+  a[href] {
+    view-transition-name: none;
+  }
+
+  /* Special handling for buttons and interactive elements */
+  button,
+  .transition-morph {
+    view-transition-name: inherit;
+  }
+
+  /* Reduce motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+}

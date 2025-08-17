@@ -37,26 +37,31 @@ export function FlashcardItem({ data, onEdit, onDelete, decks, decksLoading }: F
   };
 
   return (
-    <Card>
+    <Card className="group">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
+          {/* <span className="inline-flex items-center gap-2 text-xs font-medium text-gray-700"> */}
+
           <span
-            className={`inline-flex items-center p-2 rounded text-xs font-medium ${statusColors[data.status as FlashcardStatus]}`}
+            className={`inline-flex items-center p-1 rounded-lg relative top-1 text-xs font-medium ${statusColors[data.status as FlashcardStatus]}`}
           >
+            <div
+              className={`w-4 h-4 rounded-full mr-2 ${
+                data.status === "oczekująca"
+                  ? "bg-yellow-500"
+                  : data.status === "zatwierdzona"
+                    ? "bg-green-500"
+                    : "bg-red-500"
+              }`}
+            />
             {statusLabels[data.status as FlashcardStatus]}
           </span>
 
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="sm" onClick={handleEdit} className="h-8 w-8 p-0" title="Edytuj fiszkę">
+          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <Button variant="default" size="sm" onClick={handleEdit} className="h-8 w-8 p-0" title="Edytuj fiszkę">
               <Edit className="h-4 w-4" />
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleDelete}
-              className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
-              title="Usuń fiszkę"
-            >
+            <Button variant="ghost" size="sm" onClick={handleDelete} className="h-8 w-8 p-0" title="Usuń fiszkę">
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>

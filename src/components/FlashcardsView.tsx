@@ -101,7 +101,7 @@ export function FlashcardsView({ userId }: FlashcardsViewProps) {
 
   return (
     <div className="space-y-4">
-      <Card className="p-4">
+      <Card className="p-4 shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_rgba(0,0,0,1)]">
         <CardContent>
           <div className="flex items-center justify-between">
             <h1 className="text-6xl font-bold mb-4">Moje Fiszki</h1>

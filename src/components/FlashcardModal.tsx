@@ -198,7 +198,7 @@ export function FlashcardModal({
               <Button type="button" variant="outline" onClick={handleClose} disabled={loading}>
                 Anuluj
               </Button>
-              <Button type="submit" disabled={loading}>
+              <Button type="submit" variant="ghost" disabled={loading}>
                 {loading ? "Zapisywanie..." : submitText}
               </Button>
             </DialogFooter>

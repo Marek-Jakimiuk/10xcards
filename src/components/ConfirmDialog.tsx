@@ -42,11 +42,7 @@ export function ConfirmDialog({
           <AlertDialogCancel onClick={onCancel} disabled={loading}>
             {cancelText}
           </AlertDialogCancel>
-          <AlertDialogAction
-            onClick={onConfirm}
-            disabled={loading}
-            className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
-          >
+          <AlertDialogAction onClick={onConfirm} disabled={loading}>
             {loading ? "Usuwanie..." : confirmText}
           </AlertDialogAction>
         </AlertDialogFooter>

@@ -25,15 +25,15 @@ export default function UserMenu({ email }: UserMenuProps) {
   };
 
   return (
-    <div className="flex items-center gap-4">
-      <a href="/generator" className="text-sm text-gray-600 hover:text-gray-900">
+    <div className="flex items-center gap-4 grow">
+      <a href="/generator" className="text-lg text-gray-600 hover:text-gray-900">
         Generator
       </a>
-      <a href="/flashcards" className="text-sm text-gray-600 hover:text-gray-900">
+      <a href="/flashcards" className="text-lg text-gray-600 hover:text-gray-900">
         Moje Fiszki
       </a>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 mr-auto">
         <span className="text-sm text-gray-600 dark:text-gray-400">{email}</span>
         <Button variant="outline" onClick={handleLogout}>
           Wyloguj się

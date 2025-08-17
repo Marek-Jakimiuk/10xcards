@@ -2,6 +2,8 @@
 import "../styles/global.css";
 import Toaster from "../components/ui/sonner";
 import UserMenu from "../components/ui/UserMenu";
+import { ViewTransitions } from "astro:transitions";
+import { viewTransitionsConfig } from "../config/view-transitions.config";
 
 interface Props {
   title?: string;
@@ -11,6 +13,20 @@ const { title = "10x Astro Starter" } = Astro.props;
 
 // Get user from locals (set by middleware)
 const { user } = Astro.locals;
+
+// Generate data attributes from config
+const dataAttributes = {
+  "data-vt-enabled": viewTransitionsConfig.enabled ? "1" : "0",
+  "data-vt-flashcards": viewTransitionsConfig.pageTransitions.flashcardsPage ? "1" : "0",
+  "data-vt-generator": viewTransitionsConfig.pageTransitions.generatorPage ? "1" : "0",
+  "data-vt-auth-flip": viewTransitionsConfig.authAnimations.cardFlip ? "1" : "0",
+  "data-vt-auth-bounce": viewTransitionsConfig.authAnimations.titleBounce ? "1" : "0",
+  "data-vt-auth-fade": viewTransitionsConfig.authAnimations.formFade ? "1" : "0",
+  "data-vt-main": viewTransitionsConfig.morphing.main ? "1" : "0",
+  "data-vt-logo": viewTransitionsConfig.morphing.logo ? "1" : "0",
+  "data-vt-header": viewTransitionsConfig.morphing.header ? "1" : "0",
+  "data-vt-footer": viewTransitionsConfig.morphing.footer ? "1" : "0",
+};
 ---
 
 <!doctype html>
@@ -27,12 +43,23 @@ const { user } = Astro.locals;
       rel="stylesheet"
     />
     <title>{title}</title>
+    {viewTransitionsConfig.enabled && <ViewTransitions />}
   </head>
-  <body>
+  <body {...dataAttributes}>
     <div class="min-h-screen flex flex-col">
-      <header class="flex border-b border-black h-24" style="background-color: rgba(252, 211, 77, 0.5);">
+      <header
+        class="flex border-b border-black h-24"
+        style={`background-color: rgba(252, 211, 77, 0.5);${viewTransitionsConfig.morphing.header ? " view-transition-name: header;" : ""}`}
+      >
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-          <a href="/" class="text-xl font-bold">10x Cards</a>
+          <a
+            href="/"
+            class="text-xl font-bold"
+            style={viewTransitionsConfig.morphing.logo ? "view-transition-name: logo;" : ""}
+            data-transition="scale-up"
+          >
+            10x Cards
+          </a>
           <div>
             {
               user ? (
@@ -40,12 +67,12 @@ const { user } = Astro.locals;
               ) : (
                 <div class="flex gap-4">
                   {Astro.url.pathname !== "/login" && (
-                    <a href="/login" class="hover:text-gray-900">
+                    <a href="/login" class="hover:text-gray-900" data-transition="flip-left">
                       Zaloguj się
                     </a>
                   )}
                   {Astro.url.pathname !== "/register" && (
-                    <a href="/register" class="hover:text-gray-900">
+                    <a href="/register" class="hover:text-gray-900" data-transition="flip-right">
                       Rejestracja
                     </a>
                   )}
@@ -55,10 +82,13 @@ const { user } = Astro.locals;
           </div>
         </div>
       </header>
-      <main class="flex-1">
+      <main class="flex-1" style={viewTransitionsConfig.morphing.main ? "view-transition-name: main;" : ""}>
         <slot />
       </main>
-      <footer class="flex border-t border-black h-24" style="background-color: rgba(252, 211, 77, 0.5);">
+      <footer
+        class="flex border-t border-black h-24"
+        style={`background-color: rgba(252, 211, 77, 0.5);${viewTransitionsConfig.morphing.footer ? " view-transition-name: footer;" : ""}`}
+      >
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
           <div class="text-lg text-gray-700">
             © {new Date().getFullYear()} Made with ❤️ by <a
@@ -95,5 +125,70 @@ const { user } = Astro.locals;
     margin: 0;
     width: 100%;
     height: 100%;
+  }
+
+  /* View Transitions Animations */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.3s;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Slide animation for main content */
+  ::view-transition-old(main) {
+    animation: slide-out-right 0.3s ease-in-out forwards;
+  }
+
+  ::view-transition-new(main) {
+    animation: slide-in-left 0.3s ease-in-out forwards;
+  }
+
+  /* Header morphing animation */
+  ::view-transition-old(header),
+  ::view-transition-new(header) {
+    animation: none;
+  }
+
+  /* Logo scaling animation */
+  ::view-transition-old(logo),
+  ::view-transition-new(logo) {
+    animation-duration: 0.5s;
+    animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  /* Footer stays in place */
+  ::view-transition-old(footer),
+  ::view-transition-new(footer) {
+    animation: none;
+  }
+
+  @keyframes slide-out-right {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(100px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes slide-in-left {
+    from {
+      transform: translateX(-100px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  /* Fallback for browsers without view-transition support */
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      animation: none !important;
+    }
   }
 </style>

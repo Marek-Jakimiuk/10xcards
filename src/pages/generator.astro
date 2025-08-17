@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { FlashcardGenerator } from "../components/FlashcardGenerator";
+import { viewTransitionsConfig } from "../config/view-transitions.config";
 // import { DEFAULT_USER_ID } from "@/db/supabase.client";
 
 // Get user from supabase session
@@ -16,8 +17,10 @@ if (!user) {
 ---
 
 <Layout title="Generator Fiszek">
-  <main class="container mx-auto px-4 py-8">
-    <FlashcardGenerator client:load userId={user.id} />
-    <!-- <FlashcardGenerator client:load userId={DEFAULT_USER_ID} /> -->
-  </main>
+  <div style={viewTransitionsConfig.pageTransitions.generatorPage ? "view-transition-name: generator-page;" : ""}>
+    <main class="container mx-auto px-4 py-8">
+      <FlashcardGenerator client:load userId={user.id} />
+      <!-- <FlashcardGenerator client:load userId={DEFAULT_USER_ID} /> -->
+    </main>
+  </div>
 </Layout>

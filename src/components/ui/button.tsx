@@ -25,7 +25,7 @@ const buttonVariants = cva(
                   active:shadow-[0_0_0px_rgba(0,0,0,1)]
                   hover:shadow-[1px_1px_0px_rgba(0,0,0,1)]
                   hover:translate-x-px hover:translate-y-px active:bg-[#f774ea] active:translate-[3px]`,
-        ghost: `bg-[#B8FF9F] text-black border-0 hover:bg-[#9dfc7c] shadow-[1px_1px_0px_rgba(0,0,0,1)]
+        ghost: `bg-[#B8FF9F] text-black hover:bg-[#9dfc7c] shadow-[1px_1px_0px_rgba(0,0,0,1)]
                   active:shadow-[0_0_0px_rgba(0,0,0,1)]
                   hover:shadow-[1px_1px_0px_rgba(0,0,0,1)]
                   hover:translate-x-px hover:translate-y-px active:bg-[#7df752] active:translate-[3px]`,

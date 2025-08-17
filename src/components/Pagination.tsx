@@ -72,7 +72,7 @@ export function Pagination({ pagination, onPageChange, loading = false }: Pagina
 
   return (
     <div className="flex items-center justify-between">
-      <div className="text-sm text-gray-500">
+      <div className="text-gray-500 italic">
         Pokazano {Math.min((page - 1) * limit + 1, total)} - {Math.min(page * limit, total)} z {total} fiszek
       </div>
 
