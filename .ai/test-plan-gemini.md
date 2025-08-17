@@ -114,17 +114,17 @@ Poniżej przedstawiono przykładowe, wysokopoziomowe scenariusze testowe.
 ## 5. Środowisko Testowe
 
 *   **Środowisko lokalne:** Programiści i testerzy uruchamiają aplikację lokalnie, korzystając z lokalnej instancji Supabase (`supabase start`) w celu przeprowadzenia testów jednostkowych i integracyjnych. Wymagana wersja Node.js: `22.14.0`.
-*   **Środowisko CI/CD (GitLab Actions):** Zautomatyzowane testy jednostkowe i integracyjne będą uruchamiane dla każdego pusha do repozytorium w izolowanym kontenerze Docker.
+*   **Środowisko CI/CD (Github Actions):** Zautomatyzowane testy jednostkowe i integracyjne będą uruchamiane dla każdego pusha do repozytorium w izolowanym kontenerze Docker.
 *   **Środowisko Staging:** Dedykowana, odizolowana instancja aplikacji wdrożona na platformie hostingowej, połączona z osobnym projektem Supabase. Na tym środowisku będą przeprowadzane testy E2E oraz testy manualne. Klucze API dla usług zewnętrznych będą skonfigurowane dla tego środowiska.
 
 ## 6. Narzędzia do Testowania
 
 | Typ testu | Narzędzie | Uzasadnienie |
 |---|---|---|
-| **Testy jednostkowe i integracyjne** | **Jest** + **React Testing Library** | Popularny i dobrze wspierany standard do testowania aplikacji React, idealny do testowania komponentów i hooków. |
+| **Testy jednostkowe i integracyjne** | **Vitest** + **React Testing Library** | Popularny i dobrze wspierany standard do testowania aplikacji React, idealny do testowania komponentów i hooków. |
 | **Testy End-to-End (E2E)** | **Playwright** | Nowoczesne i potężne narzędzie oferujące szybkie i stabilne testy na różnych przeglądarkach, z doskonałym wsparciem dla testowania API. |
 | **Testy manualne API** | **Postman / Insomnia** | Umożliwiają szybkie prototypowanie i weryfikację endpointów API niezależnie od UI (zgodnie z `curl-tests/*.md`). |
-| **CI/CD** | **GitLab Actions** | Zintegrowane z repozytorium, umożliwia pełną automatyzację procesu testowania. |
+| **CI/CD** | **Github Actions** | Zintegrowane z repozytorium, umożliwia pełną automatyzację procesu testowania. |
 | **Linting i formatowanie** | **ESLint** i **Prettier** | Zapewniają spójność i jakość kodu, co jest formą statycznego testowania. |
 
 ## 7. Harmonogram Testów
@@ -168,7 +168,7 @@ Proces testowy będzie prowadzony w sposób ciągły, równolegle z procesem dew
 
 ## 10. Procedury Raportowania Błędów
 
-Wszystkie wykryte błędy będą raportowane w systemie do zarządzania projektami (np. GitLab Issues, Jira).
+Wszystkie wykryte błędy będą raportowane w systemie do zarządzania projektami (np. Github Issues, Jira).
 
 ### 10.1 Format Zgłoszenia Błędu
 

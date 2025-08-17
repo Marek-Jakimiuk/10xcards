@@ -6,7 +6,10 @@
   - [Project Name](#project-name)
   - [Project Description](#project-description)
   - [Tech Stack](#tech-stack)
-  - [Service Architecture & Naming Conventions](#service-architecture-&-naming-conventions)
+  - [Service Architecture \& Naming Conventions](#service-architecture--naming-conventions)
+    - [Service Types](#service-types)
+    - [Naming Convention Rules](#naming-convention-rules)
+    - [Current Service Structure](#current-service-structure)
   - [Getting Started Locally](#getting-started-locally)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
@@ -25,7 +28,8 @@
 - **Frontend:** Astro 5, React 19, TypeScript 5, Tailwind 4, Shadcn/ui
 - **Backend:** Supabase (Authentication & PostgreSQL)
 - **AI Integration:** OpenRouter.ai API for LLM-based flashcard generation
-- **CI/CD & Hosting:** GitLab Actions, Docker
+- **Testing:** Vitest + React Testing Library (unit & integration tests), Playwright (E2E tests)
+- **CI/CD & Hosting:** Github Actions, Docker
 - **Tooling:** ESLint, Prettier
 
 ## Service Architecture & Naming Conventions
@@ -76,6 +80,8 @@ The project follows a clear service-oriented architecture with consistent naming
 - `npm run build` - Builds the project for production.
 - `npm run preview` - Serves the production build.
 - `npm run astro` - Executes Astro CLI commands.
+- `npm run test` - Runs unit and integration tests using Vitest.
+- `npm run test:e2e` - Runs end-to-end tests using Playwright.
 - `npm run lint` - Lints the codebase using ESLint.
 - `npm run lint:fix` - Automatically fixes linting issues.
 - `npm run format` - Formats the codebase using Prettier.

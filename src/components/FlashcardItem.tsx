@@ -68,10 +68,11 @@ export function FlashcardItem({ data, onEdit, onDelete, decks, decksLoading }: F
         </div>
         <div className="flex items-center gap-1 mt-2 text-xs">
           {/* <FolderOpen className="h-3 w-3" /> */}
+          Talia:
           {data.deck_id ? (
             <span className="text-gray-600">{decksLoading ? "Ładowanie..." : deckName || "Nieznana talia"}</span>
           ) : (
-            <span className="text-gray-400">Brak talii</span>
+            <span className="text-gray-400">Brak</span>
           )}
         </div>
       </CardHeader>
