@@ -98,5 +98,9 @@
   },
   "resolutions": {
     "rollup": "npm:@rollup/wasm-node"
+  },
+  "optionalDependencies": {
+    "@tailwindcss/oxide-linux-x64-gnu": "^4.0.17",
+    "lightningcss-linux-x64-gnu": "^1.29.0"
   }
 }
