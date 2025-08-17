@@ -61,7 +61,7 @@ Your Account ID can be found in:
 1. Go to Cloudflare Dashboard → Pages
 2. Click "Create a project"
 3. Choose "Connect to Git" (if not using direct upload)
-4. Set project name to: `10x0-cards-2`
+4. Set project name to: `10xcards`
 5. Configure build settings:
    - **Build command**: `npm run build`
    - **Build output directory**: `dist`
@@ -147,7 +147,7 @@ npx wrangler whoami
 npx wrangler pages project list
 
 # Deploy manually
-npx wrangler pages deploy dist --project-name=10x0-cards-2
+npx wrangler pages deploy dist --project-name=10xcards
 ```
 
 ## Migration from Previous Setup
