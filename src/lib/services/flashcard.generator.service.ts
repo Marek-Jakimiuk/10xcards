@@ -10,13 +10,14 @@ import {
   ApiError, // ... istniejące importy ...
   OpenRouterError,
 } from "../openrouter-service";
+import { OPENROUTER_API_KEY } from "astro:env/server";
 
 export class FlashcardGeneratorService {
   private openRouter: OpenRouterService;
   private supabase: SupabaseClient;
 
   constructor() {
-    const apiKey = import.meta.env.OPENROUTER_API_KEY;
+    const apiKey = OPENROUTER_API_KEY;
     console.log("🔑 [FlashcardGenerator] API Key status:", apiKey ? "✅" : "Missing");
 
     if (!apiKey) {
