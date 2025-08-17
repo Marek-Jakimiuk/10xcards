@@ -131,6 +131,10 @@ npm run preview
    - Build may show warning about SESSION KV binding
    - This is expected for session support - can be ignored if not using sessions
    - To fix: Add SESSION KV binding in Cloudflare Pages settings if using sessions
+6. **API Token Environment Variable**: 
+   - Wrangler requires CLOUDFLARE_API_TOKEN as environment variable
+   - Must be set both in `with:` section AND `env:` section of GitHub Actions
+   - This ensures proper authentication in non-interactive environment
 
 ### Useful Commands:
 
