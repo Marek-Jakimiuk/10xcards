@@ -1,7 +1,8 @@
 import React from "react";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Button } from "./ui/button";
-import { Edit, Trash2, FolderOpen } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
+// import { Edit, Trash2, FolderOpen } from "lucide-react";
 import type { FlashcardDTO, FlashcardStatus, DeckDTO } from "../types";
 
 interface FlashcardItemProps {

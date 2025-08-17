@@ -1,16 +1,7 @@
 import { useState, useCallback } from "react";
 import { toast } from "sonner";
 import { routesApi } from "../../lib/routes";
-import type {
-  SuggestionViewModel,
-  FlashcardGenerateResponseDTO,
-  FlashcardCreateCommand,
-  FlashcardGenerateCommand,
-} from "../../types";
-
-interface UseFlashcardGeneratorProps {
-  userId: string;
-}
+import type { FlashcardGenerateResponseDTO, FlashcardCreateCommand, FlashcardGenerateCommand } from "../../types";
 
 interface UseFlashcardGeneratorReturn {
   text: string;
@@ -19,7 +10,8 @@ interface UseFlashcardGeneratorReturn {
   setTitle: (title: string) => void;
   status: "idle" | "loading" | "saving" | "success" | "error";
   error: string | null;
-  suggestions: SuggestionViewModel[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  suggestions: any[];
   isTextValid: boolean;
   isTitleValid: boolean;
   remainingChars: number;
@@ -32,12 +24,13 @@ interface UseFlashcardGeneratorReturn {
   pendingSaves: Set<string>;
 }
 
-export function useFlashcardGenerator({ userId }: UseFlashcardGeneratorProps): UseFlashcardGeneratorReturn {
+export function useFlashcardGenerator(): UseFlashcardGeneratorReturn {
   const [text, setText] = useState("");
   const [title, setTitle] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "saving" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
-  const [suggestions, setSuggestions] = useState<SuggestionViewModel[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [suggestions, setSuggestions] = useState<any[]>([]);
   const [pendingSaves, setPendingSaves] = useState<Set<string>>(new Set());
   const [deckId, setDeckId] = useState<string | null>(null);
 
@@ -116,6 +109,7 @@ export function useFlashcardGenerator({ userId }: UseFlashcardGeneratorProps): U
         });
       } catch (err) {
         // Revert the optimistic update on error
+        console.log("TC:  ~ handleSuggestionStatusChange ~ err:", err);
         setSuggestions((prev) =>
           prev.map((suggestion) => (suggestion.id === id ? { ...suggestion, status: suggestion.status } : suggestion))
         );

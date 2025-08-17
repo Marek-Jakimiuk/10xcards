@@ -2,9 +2,10 @@ import { defineMiddleware } from "astro:middleware";
 import { createSupabaseServer } from "../db/supabase.server";
 
 // Public paths that don't require authentication
-const PUBLIC_PATHS = ["/login", "/register", "/auth/reset-password"];
+// const PUBLIC_PATHS = ["/login", "/register", "/auth/reset-password"];
 
-export const onRequest = defineMiddleware(async ({ cookies, url, redirect, locals }, next) => {
+// export const onRequest = defineMiddleware(async ({ cookies, url, redirect, locals }, next) => {
+export const onRequest = defineMiddleware(async ({ cookies, locals }, next) => {
   // Create server-side Supabase client
   const supabase = createSupabaseServer(cookies);
   locals.supabase = supabase;

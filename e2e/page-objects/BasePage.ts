@@ -1,4 +1,4 @@
-import { Page, Locator, expect } from '@playwright/test';
+import { Page, Locator, expect } from "@playwright/test";
 
 export class BasePage {
   readonly page: Page;
@@ -7,12 +7,12 @@ export class BasePage {
     this.page = page;
   }
 
-  async goto(path: string = '') {
+  async goto(path = "") {
     await this.page.goto(path);
   }
 
   async waitForLoad() {
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState("networkidle");
   }
 
   async takeScreenshot(name: string) {

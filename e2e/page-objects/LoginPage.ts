@@ -1,5 +1,5 @@
-import { Page, Locator } from '@playwright/test';
-import { BasePage } from './BasePage';
+import { Page, Locator } from "@playwright/test";
+import { BasePage } from "./BasePage";
 
 export class LoginPage extends BasePage {
   readonly emailInput: Locator;
@@ -18,7 +18,7 @@ export class LoginPage extends BasePage {
   }
 
   async goto() {
-    await super.goto('/login');
+    await super.goto("/login");
   }
 
   async login(email: string, password: string) {

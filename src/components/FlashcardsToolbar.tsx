@@ -3,8 +3,7 @@ import { Button } from "./ui/button";
 import { DeckSelect } from "./DeckSelect";
 import { StatusFilter } from "./StatusFilter";
 import { Plus, Trash2 } from "lucide-react";
-import type { FlashcardFilters, DeckDTO } from "../types";
-import { Card, CardContent } from "./ui/card";
+import type { FlashcardFilters, DeckDTO, FlashcardStatus } from "../types";
 
 interface FlashcardsToolbarProps {
   filters: FlashcardFilters;
@@ -28,7 +27,7 @@ export function FlashcardsToolbar({
   };
 
   const handleStatusChange = (status?: string) => {
-    onFiltersChange({ status: status as any, page: 1 }); // Reset page when changing filters
+    onFiltersChange({ status: status as FlashcardStatus | undefined, page: 1 }); // Reset page when changing filters
   };
 
   const handleDeleteDeck = () => {
@@ -57,7 +56,6 @@ export function FlashcardsToolbar({
         {filters.deckId && currentDeck && (
           <Button
             variant="destructive"
-            size="sm"
             onClick={handleDeleteDeck}
             disabled={decksLoading}
             className="flex items-center gap-2"

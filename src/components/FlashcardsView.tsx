@@ -9,14 +9,9 @@ import { Pagination } from "./Pagination";
 import type { FlashcardDTO, FlashcardFormValues, FlashcardCreateCommand, FlashcardUpdateCommand } from "../types";
 import { Card, CardContent } from "./ui/card";
 
-interface FlashcardsViewProps {
-  userId: string;
-}
-
-export function FlashcardsView({ userId }: FlashcardsViewProps) {
+export function FlashcardsView() {
   const {
     state,
-    loadFlashcards,
     createFlashcard,
     updateFlashcard,
     deleteFlashcard,
