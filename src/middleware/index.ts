@@ -9,8 +9,6 @@ export const onRequest = defineMiddleware(async ({ cookies, url, redirect, local
   const supabase = createSupabaseServer(cookies);
   locals.supabase = supabase;
 
-  console.log("aaaaaaaa");
-
   // // Get session
   const {
     data: { session },
