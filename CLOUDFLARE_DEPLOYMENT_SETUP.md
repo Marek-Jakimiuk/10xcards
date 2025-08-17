@@ -123,6 +123,10 @@ npm run preview
 1. **Build Failures**: Check environment variables are set correctly
 2. **Deployment Errors**: Verify Cloudflare API token permissions
 3. **Type Errors**: The TailwindCSS type assertion may need adjustment for future versions
+4. **Yarn/Rollup Issues**: 
+   - Removed `resolutions` from package.json (Yarn-specific)
+   - Moved yarn.lock to yarn.lock.backup to force npm usage
+   - Added .npmrc to explicitly specify npm as package manager
 
 ### Useful Commands:
 
