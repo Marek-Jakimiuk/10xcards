@@ -127,6 +127,10 @@ npm run preview
    - Removed `resolutions` from package.json (Yarn-specific)
    - Moved yarn.lock to yarn.lock.backup to force npm usage
    - Added .npmrc to explicitly specify npm as package manager
+5. **KV Binding Warning**: 
+   - Build may show warning about SESSION KV binding
+   - This is expected for session support - can be ignored if not using sessions
+   - To fix: Add SESSION KV binding in Cloudflare Pages settings if using sessions
 
 ### Useful Commands:
 
