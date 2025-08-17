@@ -22,5 +22,5 @@ Testy - Kompleksowe pokrycie testami jednostkowymi i E2E:
 - Testy uruchamiane automatycznie w CI/CD pipeline poprzez Github Actions
 
 CI/CD i Hosting:
-- Github Actions do tworzenia pipeline'ów CI/CD z automatycznymi testami
-- Github do hostowania aplikacji za pośrednictwem obrazu docker
+- Github Actions do tworzenia pipeline'ów CI/CD
+- Cloudflare Pages jako hosting aplikacji Astro

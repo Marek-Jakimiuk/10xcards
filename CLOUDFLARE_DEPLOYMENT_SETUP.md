@@ -2,37 +2,42 @@
 
 ## Overview
 
-This project has been configured for deployment on Cloudflare Pages using GitHub Actions for continuous integration and deployment.
+This project has been fully configured for deployment on Cloudflare Pages using GitHub Actions for continuous integration and deployment.
 
 ## Changes Made
 
 ### 1. Astro Configuration (`astro.config.mjs`)
 
-- **Adapter**: Changed from `@astrojs/node` to `@astrojs/cloudflare`
+- **Adapter**: Configured with `@astrojs/cloudflare` for Pages deployment
 - **Platform Proxy**: Enabled for local development compatibility
+- **Environment Variables**: Updated schema to include all required variables:
+  - `SUPABASE_URL` - Supabase project URL
+  - `SUPABASE_KEY` - Supabase anon/public key (corrected from SUPABASE_PUBLIC_KEY)
+  - `OPENROUTER_API_KEY` - OpenRouter API key for AI flashcard generation
 - **TailwindCSS**: Fixed type compatibility issue with type assertion
 
 ### 2. GitHub Actions Workflow (`.github/workflows/main.yml`)
 
 - **Latest Action Versions**: Using the most up-to-date major versions:
-  - `actions/checkout@v4`
-  - `actions/setup-node@v4` 
-  - `cloudflare/wrangler-action@v3` (replaced deprecated `pages-action@v1`)
+  - `actions/checkout@v4` (latest major v4)
+  - `actions/setup-node@v4` (latest major v4)
+  - `cloudflare/wrangler-action@v3` (latest major v3, not archived)
 - **Node.js Version**: Uses Node.js 22.14.0 (from `.nvmrc`)
-- **Build Process**: Includes linting, testing, and coverage
-- **Environment Variables**: Properly scoped to build step
-- **Deployment**: Uses modern Wrangler CLI for Pages deployment
+- **Optimization**: Added timeout limits and improved conditional deployment
+- **Security**: Environment variables properly scoped to job level
+- **Performance**: npm cache enabled for faster builds
+- **Deployment**: Only deploys on push to main branch (not PRs)
 
-## Required Environment Variables
+## Required GitHub Secrets
 
-Create the following secrets in your GitHub repository settings:
+Create the following secrets in your GitHub repository settings (Settings → Secrets and variables → Actions):
 
 ### Supabase Configuration
 - `SUPABASE_URL` - Your Supabase project URL
 - `SUPABASE_KEY` - Your Supabase anon/public key
 
-### OpenAI Configuration
-- `OPENAI_API_KEY` - Your OpenAI API key for flashcard generation
+### OpenRouter AI Configuration
+- `OPENROUTER_API_KEY` - Your OpenRouter API key for flashcard generation
 
 ### Cloudflare Configuration
 - `CLOUDFLARE_API_TOKEN` - Cloudflare API token with "Cloudflare Pages - Edit" permissions
